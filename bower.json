@@ -1,0 +1,22 @@
+{
+  "name": "booster",
+  "homepage": "https://github.com/codertd/booster",
+  "authors": [
+    "Tim Doyle <coder.td@gmail.com>"
+  ],
+  "description": "Booster code challenge",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor/components/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "boostrap#^3.3.7",
+    "jquery": "^3.2.1"
+  }
+}
