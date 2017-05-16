@@ -12,16 +12,11 @@ conf_template() {
     cp $VAGRANTFILE_DATA/conf/$1 $PROJECT_ROOT/conf/$1
 }
 
-echo "-- Installing $PROJECT_NAME's Perl dependencies"
-#package perl-Redis
-#package perl-DBI
-#package perl-Try-Tiny
-#package perl-JSON
-
-
-
 echo "-- Installing Apache"
 package httpd mod_ssl
+
+echo "-- Installing PHP"
+package php php-mysql php-mbstring
 
 echo "-- Setting up $PROJECT_NAME's Apache config"
 chmod 755 $PROJECT_ROOT/../
