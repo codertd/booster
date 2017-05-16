@@ -18,8 +18,47 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+
+
+	 public function __construct() {
+		 parent::__construct();
+		 //
+		 echo "This is the initialization";
+
+		 $this->load->model("fundraiser_model");
+	 }
+
 	public function index()
 	{
-		$this->load->view('welcome_message');
+
+		$data = array();
+
+		$data = array();
+		$data['fundraisers'] = $this->fundraiser_model->getFundraisers();
+		$data['test'] = $this->addStuff();
+		$data['all'] = $data;
+
+		$this->load->view('header', $data);
+		$this->load->view('welcome_message',$data);
+		$this->load->view('footer', $data);		
+	}
+
+	public function fundraiser($fundraiser_id = 1)
+	{
+
+		$data = array();
+		$data['fundraiser'] = $this->fundraiser_model->getFundraiser($fundraiser_id);
+		$data['all'] = $data;
+
+		$this->load->view('header', $data);
+		$this->load->view('welcome_message_view_fundraiser', $data);
+		$this->load->view('footer', $data);		
+	}	
+
+
+
+	public function addStuff() {
+		//$this->load->model("fundraiser_model");
+		$this->fundraiser_model->add('1','2');
 	}
 }
