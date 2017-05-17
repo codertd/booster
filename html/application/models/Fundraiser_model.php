@@ -16,17 +16,17 @@
         public function getFundraisersByAvg() {
 
             $query = $this->db->query('
-            select 
-                fundraisers.fundraiser_id,
-                fundraisers.fundraiser_name,
-                avg(reviews.review_rating) as average_rating 
-            from 
-                fundraisers,
-                reviews 
-            where 
-                fundraisers.fundraiser_id = reviews.fundraiser_id 
-            group by fundraisers.fundraiser_id 
-            order by avg(reviews.review_rating) desc
+                select 
+                    fundraisers.fundraiser_id,
+                    fundraisers.fundraiser_name,
+                    avg(reviews.review_rating) as average_rating 
+                from 
+                    fundraisers left join reviews on (fundraisers.fundraiser_id = reviews.fundraiser_id)
+                where 
+                    fundraisers.fundraiser_id = reviews.fundraiser_id or
+                    reviews.fundraiser_id is NULL
+                group by fundraisers.fundraiser_id 
+                order by avg(reviews.review_rating) desc            
             ');
 
             return $query->result();
@@ -42,13 +42,46 @@
 
         public function getFundraiserReviews($fundraiser_id = 1) {
 
-            $query = $this->db->query('select * from fundraisers,reviews where fundraisers.fundraiser_id = reviews.fundraiser_id and fundraisers.fundraiser_id = ? order by review_date',array($fundraiser_id));
+            $query = $this->db->query('
+                select 
+                    * 
+                from 
+                    fundraisers,
+                    reviews 
+                where 
+                    fundraisers.fundraiser_id = reviews.fundraiser_id and 
+                    fundraisers.fundraiser_id = ? 
+                order by review_date',
+                array($fundraiser_id));
 
             return $query->result();
         }
 
 
-        public function createFundraiserReview($new_fundraiser) {
+        public function getFundraiserByName($fundraiser_name = NULL) {
+
+            $query = $this->db->query('
+                select 
+                    * 
+                from 
+                    fundraisers 
+                where 
+                    fundraiser_name = ?',
+                array($fundraiser_name));
+
+            return $query->result();
+        }
+
+
+        public function createFundraiser($new_fundraiser) {
+
+            $this->db->insert('fundraisers', $new_fundraiser);
+
+            return 1;
+        }
+
+
+        public function createFundraiserReview($new_fundraiser_review) {
             /*
             +---------------+--------------+------+-----+---------+----------------+
             | Field         | Type         | Null | Key | Default | Extra          |
@@ -64,9 +97,26 @@
             +---------------+--------------+------+-----+---------+----------------+
             */
 
-            $this->db->insert('reviews', $new_fundraiser);
+            $this->db->insert('reviews', $new_fundraiser_review);
 
             return 1;
+        }
+
+
+        public function hasReviewedFundraiser($fundraiser_id = 1,$ip_address = '1.1.1.1') {
+
+            $query = $this->db->query('
+                select 
+                    * 
+                from 
+                    fundraisers,reviews 
+                where 
+                fundraisers.fundraiser_id = ? and
+                fundraisers.fundraiser_id = reviews.fundraiser_id and
+                reviews.review_ip = ?
+                ',array($fundraiser_id,$ip_address));
+
+            return $query->result();
         }
 
     }

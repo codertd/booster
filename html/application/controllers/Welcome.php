@@ -23,7 +23,7 @@ class Welcome extends CI_Controller {
 	 public function __construct() {
 		 parent::__construct();
 		 //
-		 echo "This is the initialization";
+		 //echo "This is the initialization";
 
 		 $this->load->model("fundraiser_model");
 	 }
@@ -37,6 +37,14 @@ class Welcome extends CI_Controller {
 		$data['fundraisers'] = $this->fundraiser_model->getFundraisersByAvg();
 		$data['test'] = $this->addStuff();
 		$data['all'] = $data;
+
+		$data['fundraiser_name'] = array(
+			'type' => 'input',
+			'name' => 'fundraiser_name',
+			'id' => 'fundraiser_name_id',
+			'placeholder' => 'Please Enter Name'
+		);
+
 
 		$this->load->view('header', $data);
 		$this->load->view('welcome_message',$data);
@@ -53,10 +61,12 @@ class Welcome extends CI_Controller {
 
 		// Form Fields. 
 
+		$data['has_reviewed'] = $this->fundraiser_model->hasReviewedFundraiser($fundraiser_id,$_SERVER['REMOTE_ADDR']);
 
 		$data['fundraiser_id'] = array(
 		'fundraiser_id' => $fundraiser_id
 		);
+
 
 		$data['review_textarea'] = array(
 		'name' => 'textarea',
@@ -98,14 +108,20 @@ class Welcome extends CI_Controller {
 		$data['rating_radio5'] = array(
 		'name' => 'rating_radio',
 		'value' => '5',
-		);						
+		);		
 
 		$data['all'] = $data;
 
-
 		$this->load->view('header', $data);
-		$this->load->view('welcome_message_view_fundraiser', $data);
-		$this->load->view('footer', $data);		
+
+		if (count($data['has_reviewed']) > 0) {
+			$this->load->view('welcome_message_view_fundraiser_already_reviewed', $data);
+		} else {			
+			$this->load->view('welcome_message_view_fundraiser', $data);		
+		}
+
+		$this->load->view('footer', $data);
+
 	}	
 
 
@@ -194,7 +210,7 @@ class Welcome extends CI_Controller {
 				array(
 						'field' => 'rating_radio',
 						'label' => 'Rating',
-						'rules' => 'required|integer',
+						'rules' => 'required|integer|regex_match[/^[1-5]$/]',
 						'errors' => array(
 								'required' => 'You must provide a %s.',
 						),
@@ -202,7 +218,7 @@ class Welcome extends CI_Controller {
 				array(
 						'field' => 'review_textarea',
 						'label' => 'Review',
-						'rules' => 'required|min_length[25]',
+						'rules' => 'required|min_length[10]',
 						'errors' => array(
 								'required' => 'You must provide a %s.',
 						),
@@ -246,10 +262,6 @@ class Welcome extends CI_Controller {
             +---------------+--------------+------+-----+---------+----------------+
             */
 
-			if (!date_default_timezone_get('date.timezone')) {
-				// insert here the default timezone
-				date_default_timezone_set('America/Los_Angeles');
-			}
 
 			$new_fundraiser = array(
 			'review_id'		=> '',
@@ -269,6 +281,90 @@ class Welcome extends CI_Controller {
 
 		$this->load->view('footer', $data);		
 	}	
+
+
+
+
+	public function fundraiser_new()
+	{
+
+		$data = array();
+
+		$data['all'] = '';
+
+		$data['fundraiser_name'] = array(
+		'type' => 'input',
+		'name' => 'fundraiser_name',
+		'value' => $this->input->post('fundraiser_name'),		
+		'id' => 'fundraiser_name_id',
+		'placeholder' => 'Please Enter Name'
+		);
+
+		$config = array(
+				array(
+						'field' => 'fundraiser_name',
+						'label' => 'Name',
+						'rules' => 'required|alpha_numeric_spaces',
+						'errors' => array(
+								'required' => 'You must provide a %s.',
+						),	
+				),		
+		);
+
+		$this->form_validation->set_rules($config);
+
+		$this->load->view('header', $data);
+
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->load->view('welcome_message', $data);
+		}
+		else
+		{
+
+			$does_exist = $this->fundraiser_model->getFundraiserByName($this->input->post('fundraiser_name'));
+			if (count($does_exist) > 0) {
+
+				$data['fundraisers'] = $this->fundraiser_model->getFundraisersByAvg();
+
+				$data['fundraiser_name'] = array(
+					'type' => 'input',
+					'name' => 'fundraiser_name',
+					'id' => 'fundraiser_name_id',
+					'placeholder' => 'Please Enter Name'
+				);
+
+				$data['already_exists'] = 1;
+				$data['all'] = $data;
+
+				$this->load->view('welcome_message', $data);
+			} else {
+				$new_fundraiser = array(
+					'fundraiser_id' => '',
+					'fundraiser_name' => $this->input->post('fundraiser_name'),
+				);
+				$this->fundraiser_model->createFundraiser($new_fundraiser);
+
+				$data['fundraisers'] = $this->fundraiser_model->getFundraisersByAvg();
+
+				$data['fundraiser_name'] = array(
+					'type' => 'input',
+					'name' => 'fundraiser_name',
+					'id' => 'fundraiser_name_id',
+					'placeholder' => 'Please Enter Name'
+				);
+
+				$data['all'] = $data;
+
+				$this->load->view('welcome_message', $data);
+			}
+
+		}
+
+		$this->load->view('footer', $data);		
+	}	
+
+
 
 
 	public function addStuff() {
