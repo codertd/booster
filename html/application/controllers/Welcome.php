@@ -48,6 +48,9 @@ class Welcome extends CI_Controller {
 
 		$data = array();
 		$data['fundraiser'] = $this->fundraiser_model->getFundraiser($fundraiser_id);
+
+		$data['reviews'] = $this->fundraiser_model->getFundraiserReviews($fundraiser_id);
+
 		$data['all'] = $data;
 
 		$this->load->view('header', $data);
