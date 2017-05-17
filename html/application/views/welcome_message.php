@@ -20,7 +20,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div class="row">
               <div class="col-md-2"><?php echo $rec->fundraiser_id; ?></div>
               <div class="col-md-5"><?php echo $rec->fundraiser_name; ?></div>
-              <div class="col-md-2"><a href="<?php echo site_url('welcome/fundraiser/'.$rec->fundraiser_id); ?>">View Fundraiser</a></div>
+              <div class="col-md-2"><a href="<?php echo site_url('welcome/fundraiser/'.$rec->fundraiser_id); ?>">Review Fundraiser</a></div>
             </div>              
             <?php
           }
