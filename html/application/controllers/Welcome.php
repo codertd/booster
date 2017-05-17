@@ -36,7 +36,6 @@ class Welcome extends CI_Controller {
 		$data = array();
 		$data['fundraisers'] = $this->fundraiser_model->getFundraisersByAvg();
 		$data['test'] = $this->addStuff();
-		$data['all'] = $data;
 
 		$data['fundraiser_name'] = array(
 			'type' => 'input',
@@ -110,8 +109,6 @@ class Welcome extends CI_Controller {
 		'value' => '5',
 		);		
 
-		$data['all'] = $data;
-
 		$this->load->view('header', $data);
 
 		if (count($data['has_reviewed']) > 0) {
@@ -129,8 +126,6 @@ class Welcome extends CI_Controller {
 	{
 
 		$data = array();
-
-		$data['all'] = '';
 
 		$fundraiser_id = $this->input->post('fundraiser_id');
 		$data['fundraiser'] = $this->fundraiser_model->getFundraiser($fundraiser_id);
@@ -239,14 +234,6 @@ class Welcome extends CI_Controller {
 			//Storing all  values travelled through POST method
 			$checkbox_array = $this->input->post('qualification');
 
-			$data['all'] = array(
-			'fundraiser_id' => $this->input->post('fundraiser_id'),
-			'review_email' => $this->input->post('review_email'),
-			'review_name' => $this->input->post('review_name'),
-			'rating_radio' => $this->input->post('rating_radio'),
-			'review_textarea' => $this->input->post('review_textarea')
-			);
-
             /*
             +---------------+--------------+------+-----+---------+----------------+
             | Field         | Type         | Null | Key | Default | Extra          |
@@ -289,8 +276,6 @@ class Welcome extends CI_Controller {
 	{
 
 		$data = array();
-
-		$data['all'] = '';
 
 		$data['fundraiser_name'] = array(
 		'type' => 'input',
@@ -335,7 +320,6 @@ class Welcome extends CI_Controller {
 				);
 
 				$data['already_exists'] = 1;
-				$data['all'] = $data;
 
 				$this->load->view('welcome_message', $data);
 			} else {
@@ -353,8 +337,6 @@ class Welcome extends CI_Controller {
 					'id' => 'fundraiser_name_id',
 					'placeholder' => 'Please Enter Name'
 				);
-
-				$data['all'] = $data;
 
 				$this->load->view('welcome_message', $data);
 			}
