@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         
         <p class="lead">
-          test
+          Every review helps improve our Fundraisers.
         </p>
 
 
