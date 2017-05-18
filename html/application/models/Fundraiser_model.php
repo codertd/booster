@@ -13,6 +13,7 @@
             return array('value' => $param1 + $param2);
         }
 
+
         /**
         * getFundraisers
         * Returns a query result of all fundraisers, sorted by name.

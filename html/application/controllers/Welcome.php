@@ -382,6 +382,61 @@ class Welcome extends CI_Controller {
 	*/	
 	public function addStuff() {
 
-		$this->fundraiser_model->add('1','2');
+		return $this->fundraiser_model->add('1','2');
 	}
+
+
+	public function tests() {
+
+		/*
+			Model tests 
+		*/
+		// addStuff
+		$test = $this->addStuff();
+		$expected_result = 3;
+		$test_name = "testing function addStuff array.value returns 3";
+		$this->unit->run($test['value'], $expected_result, $test_name);
+
+
+		// getFundraisersByAvg
+		$test = $this->fundraiser_model->getFundraisersByAvg();
+		$test_name = "testing model function getFundraisersByAvg returns an array";
+		$this->unit->run($test, 'is_array', $test_name);
+
+		$test = (count($test) > 0);
+		$expected_result = true;
+		$test_name = "testing model function getFundraisersByAvg has at least one element";
+		$this->unit->run($test, $expected_result, $test_name);
+
+
+		// getFundraisers
+		$test = $this->fundraiser_model->getFundraisers();
+		$test_name = "testing model function getFundraisers returns an array";
+		$this->unit->run($test, 'is_array', $test_name);
+
+		$test = (count($test) > 0);
+		$expected_result = true;
+		$test_name = "testing model function getFundraisers has at least one element";
+		$this->unit->run($test, $expected_result, $test_name);
+
+
+		// getFundraiser with id 1
+		$test = $this->fundraiser_model->getFundraiser(1);
+		$test_name = "testing model function getFundraiser with fundraiser_id 1 returns an array";
+		$this->unit->run($test, 'is_array', $test_name);
+
+		$test = $this->fundraiser_model->getFundraiser(1);
+		$fundraiser_name = $test[0]->fundraiser_name;
+		$expected_result = 'Fundraiser 1';
+		$test_name = "fundraiser_id 1 should be Fundraiser 1";
+		$this->unit->run($fundraiser_name, $expected_result, $test_name);
+
+
+
+		//echo var_dump($test);
+		echo $this->unit->report();
+
+	}
+
+
 }
