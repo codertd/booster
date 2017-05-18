@@ -20,13 +20,26 @@ class Welcome extends CI_Controller {
 	 */
 
 
+
+	/**
+	* Constructor for the controller
+	*
+	* @param	none
+	* @return	none
+	*/
 	 public function __construct() {
 		 parent::__construct();
-		 //
-		 //echo "This is the initialization";
 
 		 $this->load->model("fundraiser_model");
 	 }
+
+
+	/**
+	* landing page for /welcome
+	*
+	* @param	none
+	* @return	none
+	*/
 
 	public function index()
 	{
@@ -50,6 +63,13 @@ class Welcome extends CI_Controller {
 		$this->load->view('footer', $data);		
 	}
 
+	/**
+	* Retrieve a fundraiser by id, including a non posting form for display of data.
+	*
+	* @param	$fundraiser_id
+	* @return	none
+	*/
+
 	public function fundraiser($fundraiser_id = 1)
 	{
 
@@ -58,14 +78,13 @@ class Welcome extends CI_Controller {
 		$data['fundraiser'] = $this->fundraiser_model->getFundraiser($fundraiser_id);
 		$data['reviews'] = $this->fundraiser_model->getFundraiserReviews($fundraiser_id);
 
-		// Form Fields. 
-
+		// if we've already reviewed, then we dont want to allow another review.
 		$data['has_reviewed'] = $this->fundraiser_model->hasReviewedFundraiser($fundraiser_id,$_SERVER['REMOTE_ADDR']);
 
+		// Form Fields. 
 		$data['fundraiser_id'] = array(
 		'fundraiser_id' => $fundraiser_id
 		);
-
 
 		$data['review_textarea'] = array(
 		'name' => 'textarea',
@@ -121,7 +140,12 @@ class Welcome extends CI_Controller {
 
 	}	
 
-
+	/**
+	* Post url for a new review.
+	*
+	* @param	(form data from post)
+	* @return	none
+	*/
 	public function fundraiser_review()
 	{
 
@@ -231,8 +255,6 @@ class Welcome extends CI_Controller {
 		else
 		{
 
-			//Storing all  values travelled through POST method
-			$checkbox_array = $this->input->post('qualification');
 
             /*
             +---------------+--------------+------+-----+---------+----------------+
@@ -270,7 +292,12 @@ class Welcome extends CI_Controller {
 	}	
 
 
-
+	/**
+	* Create a new Fundraiser from post data.
+	*
+	* @param	none
+	* @return	none
+	*/
 
 	public function fundraiser_new()
 	{
@@ -347,10 +374,14 @@ class Welcome extends CI_Controller {
 	}	
 
 
-
-
+	/**
+	* test method
+	*
+	* @param	$fundraiser_id
+	* @return	none
+	*/	
 	public function addStuff() {
-		//$this->load->model("fundraiser_model");
+
 		$this->fundraiser_model->add('1','2');
 	}
 }

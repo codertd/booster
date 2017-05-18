@@ -2,17 +2,38 @@
 
     class Fundraiser_model extends CI_Model {
 
+        /**
+        * test method
+        * This should validate that param1/param2 are ints.
+        *
+        * @param	$param1, $param2
+        * @return	an associative array with value set to the sum of both params.
+        */
         public function add($param1 = 0, $param2 = 0) {
             return array('value' => $param1 + $param2);
         }
 
+        /**
+        * getFundraisers
+        * Returns a query result of all fundraisers, sorted by name.
+        *
+        * @param	none
+        * @return	an array that contains all fundraisers
+        */
         public function getFundraisers() {
 
-            $query = $this->db->query('select * from fundraisers');
+            $query = $this->db->query('select * from fundraisers order by fundraiser_name');
 
             return $query->result();
         }
 
+        /**
+        * getFundraisersByAvg
+        * Returns a query result of all fundraisers, ordered by an AVG of review ratings.
+        *
+        * @param	none
+        * @return	an array that contains the sorted fundraisers by review_rating.
+        */
         public function getFundraisersByAvg() {
 
             $query = $this->db->query('
@@ -32,7 +53,13 @@
             return $query->result();
         }
 
-
+        /**
+        * getFundraiser
+        * Returns a query result with a single Fundraiser that matches a fundraiser_id.
+        *
+        * @param	$fundraiser_id
+        * @return	an array that contains the fundraiser.
+        */
         public function getFundraiser($fundraiser_id = 1) {
 
             $query = $this->db->query('select * from fundraisers where fundraiser_id = ?',array($fundraiser_id));
@@ -40,6 +67,13 @@
             return $query->result();
         }
 
+        /**
+        * getFundraiserReviews
+        * Returns a query result with all reviews associated by the fundraiser_id
+        *
+        * @param	$fundraiser_id
+        * @return	an array that contains the fundraiser reviews.
+        */
         public function getFundraiserReviews($fundraiser_id = 1) {
 
             $query = $this->db->query('
@@ -58,6 +92,13 @@
         }
 
 
+        /**
+        * getFundraiserByName
+        * Returns a query result with all fundraisers with the fundraiser_name
+        *
+        * @param	$fundraiser_id
+        * @return	an array that contains the fundraiser reviews.
+        */
         public function getFundraiserByName($fundraiser_name = NULL) {
 
             $query = $this->db->query('
@@ -73,6 +114,13 @@
         }
 
 
+        /**
+        * createFundraiser
+        * Returns true if a new fundraiser is created.
+        *
+        * @param	$new_fundraiser associative array.
+        * @return	true.
+        */
         public function createFundraiser($new_fundraiser) {
 
             $this->db->insert('fundraisers', $new_fundraiser);
@@ -81,6 +129,13 @@
         }
 
 
+        /**
+        * createFundraiserReview
+        * Returns true if a new fundraiser is created.
+        *
+        * @param	$new_fundraiser_review associative array.
+        * @return	true.
+        */
         public function createFundraiserReview($new_fundraiser_review) {
             /*
             +---------------+--------------+------+-----+---------+----------------+
@@ -103,7 +158,14 @@
         }
 
 
-        public function hasReviewedFundraiser($fundraiser_id = 1,$ip_address = '1.1.1.1') {
+        /**
+        * hasReviewedFundraiser
+        * Returns a query result with any fundraiser reviews from a given IP, as one can only post a review once.
+        *
+        * @param	$fundraiser_id, $ip_address
+        * @return	an array that contains the fundraiser reviews.
+        */
+        public function hasReviewedFundraiser($fundraiser_id = 1, $ip_address = '1.1.1.1') {
 
             $query = $this->db->query('
                 select 

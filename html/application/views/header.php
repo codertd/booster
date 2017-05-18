@@ -13,14 +13,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <title>Booster Code Challenge</title>
 
-	<title>Welcome to CodeIgniter</title>
-
-	<link href="<?php echo base_url('assets/css/bootstrap.css');?>" rel="stylesheet">
-	<link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/bootstrap.css');?>" rel="stylesheet">
+    <link href="<?php echo base_url('assets/css/bootstrap.min.css'); ?>" rel="stylesheet">
 
 </head>
-
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
